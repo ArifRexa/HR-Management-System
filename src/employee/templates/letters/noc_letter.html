@@ -1,0 +1,30 @@
+{% extends 'letters/extra/base.html' %}
+
+{% block content %}
+    <style>
+        p, b {
+            font-size: 16px;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+    </style>
+    {% for employee in employees %}
+        <p>
+            Ref: Mediusware Ltd./{{ latter_type }}/{{ employee.resignation_date | date:'Ym' }}{{ employee.id }} <br>
+            Date: {{ employee.resignation_date }} <br>
+            <b>{{ employee.full_name | title }}</b> <br>
+            Email: {{ employee.email }}<br>
+        </p>
+        <br>
+        <br>
+        <br>
+        <center><h2>To Whom It May Concern</h2></center>
+
+        {{ employee.employeenoc.noc_body|safe }}
+
+        {% include 'letters/extra/noc_footer.html' %}
+        <div class="page-break"></div>
+    {% endfor %}
+{% endblock %}

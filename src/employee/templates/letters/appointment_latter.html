@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% include 'letters/extra/header.html' with title='Appointment Latter' %}
+</head>
+
+{% load humanize %}
+{% load humanize_extra %}
+
+<body>
+{% for employee in employees %}
+    <p>Ref: Mediusware Ltd./{{ latter_type }}/{{ employee.joining_date | date:'Ym' }}{{ employee.id }} <br>
+        Date: {{ employee.joining_date }} <br>
+        <b>{{ employee.full_name | title }}</b> <br>
+        Email: {{ employee.email }}<br>
+    </p>
+    <p><b>Subject: Appointment Letter of {{ employee.full_name | title }}</b></p>
+    <p>Dear {{ employee.full_name | title }},</p>
+    <p>Upon reviewing your application and interviewing you in person we are very pleased to appoint you as the
+        <b>{{ employee.designation }}</b> for Mediusware Ltd. in <b>24/1, Taj Mahal Road, Shiya Masjid mor, Floor- 7th & 8th, Ring Road,
+            Mohammadpur,
+            Dhaka.</b> You are
+        expected to
+        perform your duties and exercise your skills as a <b>‘{{ employee.designation }}’</b>
+        from {{ employee.joining_date }} as per terms and
+        conditions
+        discussed and agreed upon as under:</p>
+    <ol style="line-height: 20px">
+        <li>This appointment is effective from <b>{{ employee.joining_date }}</b>, the date of your joining under
+            Mediusware
+        </li>
+        <li>You will be under a probation period of 3 (three) months from the joining date. It may be increased or
+            decreased
+            based on your performance.
+        </li>
+        <li>
+            {% include 'letters/extra/salary_table.html' with payable_salary=employee.joining_salary.payable_salary %}
+        </li>
+        <li>
+
+        </li>
+        <!-- <li>
+            <b> You will receive an additional Tk 3000 as Food Allowance (depending on the number of working days), in
+            addition to your gross salary. Therefore, your Total Remuneration will be approximately Tk 39,000, which
+            includes both your Gross Salary and Food Allowance.
+            </b>
+
+        </li> -->
+        <!-- <li>If the organization thinks that you are not well-suited for the assigned tasks or you are not performing
+            well as
+            per your job responsibilities, then the organization will reserve the right to take any decision of
+            termination
+            depending on the circumstances.
+        </li> -->
+    </ol>
+    {% include 'letters/extra/hr_policy.html' %}
+    <p>I hope that this will be the beginning of a long and successful career with us</p>
+    {% include 'letters/extra/footer.html' %}
+{% endfor %}
+</body>
+
+</html>

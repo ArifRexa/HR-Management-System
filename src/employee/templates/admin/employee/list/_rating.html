@@ -1,0 +1,7 @@
+{% load humanize_extra %}
+
+<ul>
+    {% for month, average_rating in ratings %}
+    <li><b>Average Rating : {{average_rating}}</b>  [{{month|int_to_month}}] </li>
+    {% endfor %}
+</ul>

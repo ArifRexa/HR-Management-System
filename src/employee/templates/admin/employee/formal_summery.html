@@ -1,0 +1,83 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrahead %}
+    <style>
+        .d-flex {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px 40px;
+        }
+
+        .d-flex div {
+            width: 100%;
+        }
+        .d-flex div table{
+            width: 100%;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex">
+        {% comment %} <div>
+            <h1>Birthday</h1>
+            <ol>
+                {% for employee_birthday in birthday %}
+                    <li>{{ employee_birthday.full_name }} at <b>{{ employee_birthday.date_of_birth }}</b></li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div>
+            <h1>Increment</h1>
+            <ol>
+                {% for employee_increment in increment %}
+                    <li>{{ employee_increment.full_name }} last incremented at
+                        <b>{{ employee_increment.current_salary.active_from }}
+                            ({{ employee_increment.current_salary.active_from | timesince }})</b></li>
+                {% endfor %}
+            </ol>
+        </div> {% endcomment %}
+        <div>
+            <h1>Salary Increment List</h1>
+            <table class="table table-striped table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">Employee Name</th>
+                    <th scope="col">Employee Email</th>
+                    <th scope="col">Increment Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% if salary_change %}
+                  {% for changes in salary_change %}
+                  <tr>
+                    <td>{{changes.full_name}}</td>
+                    <td>{{changes.email}}</td>
+                    <td>{{ changes.current_salary.active_from }}</td>
+                  </tr>
+                  {% endfor %}
+                {% endif %}
+                </tbody>
+              </table>
+        </div>
+        {% comment %} <div>
+            <h1>Permanent</h1>
+            <ol>
+                {% for permanent_employee in permanent %}
+                    <li>{{ permanent_employee.full_name }} Joined At <b>{{ permanent_employee.joining_date }}
+                        ({{ permanent_employee.joining_date_human }})</b></li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div>
+            <h1>Anniversary</h1>
+            <ol>
+                {% for employee in anniversaries %}
+                    <li>{{ employee.full_name }} <b>({{ employee.joining_date_human }})</b>
+                    </li>
+                {% endfor %}
+            </ol>
+        </div> {% endcomment %}
+    </div>
+{% endblock %}

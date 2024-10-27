@@ -1,0 +1,64 @@
+{% extends 'admin/base_site.html' %}
+
+{% block content %}
+    <h1>{{ employee.full_name }}</h1>
+
+    <h3>Monthly Salary</h3>
+    <div style="overflow-x:auto;">
+        <table style="min-width: 100%">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Net Salary</th>
+                <th>Overtime</th>
+                <th>Project Bonus</th>
+                <th>Leave Bonus</th>
+                <th>Festival Bonus</th>
+                <th>Food Allowance</th>
+                <th>Loan</th>
+                <th>QC Bonus</th>
+                <th>Gross Salary</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for employee_salary in employee_salaries %}
+                <tr>
+                    <td>{{ employee_salary.salary_sheet.date }}</td>
+                    <td>{{ employee_salary.net_salary }}</td>
+                    <td>{{ employee_salary.overtime }}</td>
+                    <td>{{ employee_salary.project_bonus }}</td>
+                    <td>{{ employee_salary.leave_bonus }}</td>
+                    <td>{{ employee_salary.festival_bonus }}</td>
+                    <td>{{ employee_salary.food_allowance }}</td>
+                    <td>{{ employee_salary.loan_emi }}</td>
+                    <td>{{ employee_salary.code_quality_bonus }}</td>
+                    <td>{{ employee_salary.gross_salary }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <br> <br> <br>
+
+    <h3>Festival Bonus</h3>
+    <div style="overflow-x:auto;">
+        <table style="min-width: 100%">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Bonus Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for employee_festival_bonus in employee_festival_bonuses %}
+                <tr>
+                    <td>{{ employee_festival_bonus.festival_bonus_sheet.date }}</td>
+                    <td>{{ employee_festival_bonus.amount }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

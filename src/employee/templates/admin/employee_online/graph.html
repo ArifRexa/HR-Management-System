@@ -1,0 +1,177 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}
+    Employee Break Graph
+{% endblock %}
+
+{% block content %}
+    {% load static %}
+
+
+    <style>
+        @import "https://code.highcharts.com/css/highcharts.css";
+
+        #employee-online {
+            min-width: 90vw;
+            max-width: 100vw;
+            height: 100vh;
+            margin: 1em auto;
+        }
+
+        .highcharts-xrange-series .highcharts-point {
+            stroke-width: 1px;
+            stroke: gray;
+        }
+
+        .highcharts-partfill-overlay {
+            fill: #010101;
+            fill-opacity: 0.3;
+        }
+
+        .highcharts-data-label text {
+            fill: white;
+            text-shadow: 1px 1px black, -1px 1px black, -1px -1px black, 1px -1px black;
+        }
+
+    </style>
+
+    <form action="{% url 'admin:employee.online.graph' %}" method="get">
+        <input type="date" name="date">
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="employee-online"></div>
+
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js"></script>
+
+
+    <script src="https://code.highcharts.com/modules/xrange.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <script>
+
+        let myData =
+        {{ graph_data | safe }}
+
+        const categories = myData?.map((data, index) => data[0]);
+
+        var chartData = [];
+        for (let i = 0; i < myData.length; i++) {
+            for (let j = 0; j < myData[i][1].length; j++) {
+
+                chartData.push({
+                    'x': myData[i][1][j],
+                    'x2': myData[i][1][++j],
+                    'y': i
+                });
+            }
+
+            // console.log(chartData);
+
+        }
+
+        Highcharts.setOptions({
+            time: {
+                timezone: 'Asia/Dhaka',
+                useUTC: true
+            }
+        });
+
+        Highcharts.chart('employee-online', {
+            chart: {
+                type: 'xrange',
+                styledMode: true
+            },
+            title: {
+                text: 'Employee Activities'
+            },
+            tooltip: {
+                formatter: function () {
+
+                    let y = this.y, series = this.series, activeTime = 0, breakTime = 0, first = -1, last = -1
+
+
+                    for (var i = 0; i < series.data.length; i++) {
+
+                        if (series.data[i].y == this.y) {
+                            activeTime += series.data[i].x2 - series.data[i].x;
+                            if (first == -1) first = i;
+                            last = i;
+                        }
+                        //const name = this.series.yAxis['categories'][0];
+                    }
+                    breakTime = series.data[last].x2 - series.data[first].x - activeTime;
+
+                    //console.log(series.yAxis['categories'][y])
+
+                    
+
+                    const entry = new Date(series.data[first].x);
+                    const exit = new Date(series.data[last].x2);
+
+                    var options = { 
+                        hour12: true,
+                    };
+
+                    // console.log(formatAMPM(entry));
+                    // console.log(formatAMPM(exit));
+
+                    return `<strong>${series.yAxis['categories'][y]}</strong> <br> Outside Office - ${msToTime(breakTime)} <br> Inside Office - ${msToTime(activeTime)} <br> Entry - ${formatAMPM(entry)} <br> Exit - ${formatAMPM(exit)}`
+
+                }
+            },
+            xAxis: {
+                type: 'datetime',
+                dateTimeLabelFormats: {
+                    hour: '%I:%M %P',
+                    minute: '%I:%M %P'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Employees'
+                },
+                categories: categories,
+                reversed: true
+            },
+
+            series: [{
+                name: 'Employee Activity',
+                // pointPadding: 0,
+                // groupPadding: 0,
+                pointWidth: 6,
+                data: chartData,
+                dataLabels: {
+                    enabled: true
+                }
+            }]
+
+        });
+
+        function msToTime(duration) {
+            let minutes = Math.floor((duration / (1000 * 60)) % 60),
+                hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+            hours = (hours < 10) ? "0" + hours : hours;
+            minutes = (minutes < 10) ? "0" + minutes : minutes;
+
+            return parseInt(hours) + "h : " + parseInt(minutes) + 'm';
+        }
+
+        function formatAMPM(date) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            var strTime = hours + ':' + minutes + ' ' + ampm;
+            return strTime;
+        }
+    </script>
+
+{% endblock %}

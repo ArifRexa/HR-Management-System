@@ -1,0 +1,45 @@
+{% extends 'mail/basic_layout.html' %}
+
+{% block content %}
+    <p>Hello <b>{{ candidate_assessment.candidate_job.candidate.full_name }}</b>, <br>
+        Thank you for apply at <b>Mediusware Ltd.</b> in the position of
+        <b>{{ candidate_assessment.candidate_job.job.title }}</b>,
+        <br>
+    </p>
+    <p>
+        To join in <b>Mediusware</b> you need to
+        complete <strong>{{ candidate_assessment.candidate_job.job.assessments.count }}</strong> exam which are :
+    <ul>
+        {% for exam in candidate_assessment.candidate_job.job.assessments.all %}
+            <li>{{ exam.title }}</li>
+        {% endfor %}
+    </ul>
+    <br>
+    </p>
+    <p>To attend <b>{{ candidate_assessment.assessment.title }}</b> please click in link given
+        below
+    </p>
+    <br>
+    <b style="font-size: 24px"><a href="{{ url }}">Exam Details ({{ candidate_assessment.assessment.title }})</a></b>
+
+    <p>Wish you good luck</p>
+    <p>Regards, <br>
+        Mediusware Ltd, <br>
+        +8801601712931 <br>
+        hr@mediusware.com<br>
+        Facebook: <a href="https://www.facebook.com/mediusware" target="_blank">https://www.facebook.com/mediusware</a> <br>
+        LinkedIn: <a href="https://www.linkedin.com/company/mediusware-ltd/" target="_blank">https://www.linkedin.com/company/mediusware-ltd/</a>
+    </p>
+    <hr>
+    <p>You can navigate all exams from our job portal. please visit this link "<a href="https://job.mediusware.com/user">https://job.mediusware.com/user</a>" to
+        navigate your profile in our job portal </p>
+
+    <address>
+        Applicant Notes: <br>
+        ================= <br>
+        {{ candidate_assessment.candidate_job.additional_message | safe }}
+    </address>
+
+    {#    <p style="display: none">{{ candidate_assessment.candidate_job.additional_message | safe }}</p>#}
+
+{% endblock %}
